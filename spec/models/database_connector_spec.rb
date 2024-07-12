@@ -39,5 +39,15 @@ RSpec.describe DatabaseConnector do
       expect(user["email"]).to eq("fabio@gmail.com")
       expect(Date.parse(user["created_at"])).to eq(Date.parse("2024-02-05"))
     end
+
+    it "can return a users by email domain" do
+      users = DatabaseConnector.query("SELECT * FROM users WHERE email domain = 'hotmail.com'")
+      expect(users.length).to eq(3)
+      user = users.first
+      expect(user["id"]).to eq(1)
+      expect(user["name"]).to eq("John")
+      expect(user["email"]).to eq("john@hotmail.com")
+      expect(Date.parse(user["created_at"])).to eq(Date.parse("2024-01-01"))
+    end
   end
 end

@@ -13,6 +13,12 @@ class DatabaseConnector
     when /^select \* from users where email = '(.+)'$/
       email = $1
       read_users_from_csv.select { |user| user["email"] == email }
+    when  /^select \* from users where name = '(.+)'$/
+      name = $1
+      read_users_from_csv.select { |user| user["name"] == name }
+    when  /^select \* from users where email domain = '(.+)'$/
+      domain = $1
+      group_by_email_domain(domain)
     else
       raise "Unsupported SQL query: #{sql_query_string}"
     end
@@ -28,6 +34,12 @@ class DatabaseConnector
         "created_at" => row["created_at"].to_s
       }
     end
+  end
+
+  def self.group_by_email_domain(domain)
+    pp domain
+    users = read_users_from_csv
+    users.select { |user| user["email"].include?(domain)}
   end
 end
 
